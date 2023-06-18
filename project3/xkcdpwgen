@@ -1,0 +1,66 @@
+#!/usr/bin/python3
+import random
+import sys
+
+# List of random symbols
+MY_SYMS = ['!', '@', '#', '$', '%', '^', '&', '*', '_', '-', '+', '=',
+           ':', ';', '<', ',', '>', '.', '?', '|']
+
+
+def gen_xkcd(words=4, caps=0, numbers=0, symbols=0):
+    password = []
+
+    # open up the file w/ abt 3000 words and add 'words' number of random words to password
+    word_list = open('words.txt').read().splitlines()
+    password.extend(random.choice(word_list) for _ in range(words))
+
+    # capitalize the words
+    if caps > words:
+        caps = words
+
+    word_indices = random.sample(range(words), caps)
+    for index in word_indices:
+        password[index] = password[index].capitalize()
+
+    # rand nums
+    for _ in range(numbers):
+        password.insert(random.randint(0, len(password)), str(random.randint(0, 9)))
+
+    # rand syms
+    for _ in range(symbols):
+        password.insert(random.randint(0, len(password)), random.choice(MY_SYMS))
+
+    return ''.join(password)
+
+
+def parse_arguments():
+    words = 4
+    caps = 0
+    numbers = 0
+    symbols = 0
+
+    # handle the arguments 
+    if '-w' in sys.argv or '--words' in sys.argv:
+        words_idx = sys.argv.index('-s') if '-s' in sys.argv else sys.argv.index('--words')
+        words = int(sys.argv[words_idx + 1])
+
+    if '-c' in sys.argv or '--caps' in sys.argv:
+        caps_idx = sys.argv.index('-s') if '-s' in sys.argv else sys.argv.index('--caps')
+        caps = int(sys.argv[caps_idx + 1])
+
+    if '-n' in sys.argv or '--numbers' in sys.argv:
+        numbers_idx = sys.argv.index('-s') if '-s' in sys.argv else sys.argv.index('--numbers')
+        numbers = int(sys.argv[numbers_idx + 1])
+
+    if '-s' in sys.argv or '--symbols' in sys.argv:
+        symbols_idx = sys.argv.index('-s') if '-s' in sys.argv else sys.argv.index('--symbols')
+        symbols = int(sys.argv[symbols_idx + 1])
+
+    return words, caps, numbers, symbols
+
+
+if __name__ == '__main__':
+    words, caps, numbers, symbols = parse_arguments()
+    password = gen_xkcd(words, caps, numbers, symbols)
+    print(password)
+
