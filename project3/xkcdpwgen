@@ -2,7 +2,7 @@
 import random
 import sys
 
-# List of random symbols
+# random symbols that could be added to pwd
 MY_SYMS = ['!', '@', '#', '$', '%', '^', '&', '*', '_', '-', '+', '=',
            ':', ';', '<', ',', '>', '.', '?', '|']
 
