@@ -2,7 +2,7 @@
 import random
 import sys
 
-# random symbols that could be added to pwd
+# random symbols that could be added to password
 MY_SYMS = ['!', '@', '#', '$', '%', '^', '&', '*', '_', '-', '+', '=',
            ':', ';', '<', ',', '>', '.', '?', '|']
 
@@ -10,7 +10,7 @@ MY_SYMS = ['!', '@', '#', '$', '%', '^', '&', '*', '_', '-', '+', '=',
 def gen_xkcd(words=4, caps=0, numbers=0, symbols=0):
     password = []
 
-    # open up the file w/ abt 3000 words and add 'words' number of random words to password
+    # open up the file w/ about 3000 words and add 'words' number of random words to password
     word_list = open('words.txt').read().splitlines()
     password.extend(random.choice(word_list) for _ in range(words))
 
@@ -24,11 +24,13 @@ def gen_xkcd(words=4, caps=0, numbers=0, symbols=0):
 
     # rand nums
     for _ in range(numbers):
-        password.insert(random.randint(0, len(password)), str(random.randint(0, 9)))
+        password.insert(random.randint(0, len(password)),
+                        str(random.randint(0, 9)))
 
     # rand syms
     for _ in range(symbols):
-        password.insert(random.randint(0, len(password)), random.choice(MY_SYMS))
+        password.insert(random.randint(0, len(password)),
+                        random.choice(MY_SYMS))
 
     return ''.join(password)
 
@@ -39,28 +41,47 @@ def parse_arguments():
     numbers = 0
     symbols = 0
 
-    # handle the arguments 
+    # handle the arguments
     if '-w' in sys.argv or '--words' in sys.argv:
-        words_idx = sys.argv.index('-s') if '-s' in sys.argv else sys.argv.index('--words')
+        words_idx = sys.argv.index(
+            '-w') if '-w' in sys.argv else sys.argv.index('--words')
         words = int(sys.argv[words_idx + 1])
 
     if '-c' in sys.argv or '--caps' in sys.argv:
-        caps_idx = sys.argv.index('-s') if '-s' in sys.argv else sys.argv.index('--caps')
+        caps_idx = sys.argv.index(
+            '-c') if '-c' in sys.argv else sys.argv.index('--caps')
         caps = int(sys.argv[caps_idx + 1])
 
     if '-n' in sys.argv or '--numbers' in sys.argv:
-        numbers_idx = sys.argv.index('-s') if '-s' in sys.argv else sys.argv.index('--numbers')
+        numbers_idx = sys.argv.index(
+            '-n') if '-n' in sys.argv else sys.argv.index('--numbers')
         numbers = int(sys.argv[numbers_idx + 1])
 
     if '-s' in sys.argv or '--symbols' in sys.argv:
-        symbols_idx = sys.argv.index('-s') if '-s' in sys.argv else sys.argv.index('--symbols')
+        symbols_idx = sys.argv.index(
+            '-s') if '-s' in sys.argv else sys.argv.index('--symbols')
         symbols = int(sys.argv[symbols_idx + 1])
 
     return words, caps, numbers, symbols
 
 
 if __name__ == '__main__':
+    if '-h' in sys.argv or '--help' in sys.argv:
+        print(
+            "usage: xkcdpwgen [-h] [-w WORDS] [-c CAPS] [-n NUMBERS] [-s SYMBOLS]")
+        print("Generate a secure, memorable password using the XKCD method")
+        print()
+        print("optional arguments:")
+        print("  -h, --help            show this help message and exit")
+        print("  -w WORDS, --words WORDS")
+        print("                        include WORDS words in the password (default=4)")
+        print("  -c CAPS, --caps CAPS  capitalize the first letter of CAPS random words (default=0)")
+        print("  -n NUMBERS, --numbers NUMBERS")
+        print("                        insert NUMBERS random numbers in the password (default=0)")
+        print("  -s SYMBOLS, --symbols SYMBOLS")
+        print("                        insert SYMBOLS random symbols in the password (default=0)")
+        sys.exit(0)
+
     words, caps, numbers, symbols = parse_arguments()
     password = gen_xkcd(words, caps, numbers, symbols)
     print(password)
-
